@@ -1,14 +1,41 @@
-# ThreeBoilerplate
+# Noah Deetz  
+**Plugin Designer • Audio DSP Developer**
 
-This is the boilerplate that I'm using for my Three.js tutorials.
 
-Wanna use it? okay then just follow these simple steps:
 
-1. Clone the repository;
-2. Open the folder in Visual Studio Code;
-3. Open the terminal and type this command: npm install
-5. Run the app on the server by typing this command: npx vite
-6. Ctrl + click on the server link "http://localhost:5173/" to open the app in your browser;
-7. Have fun!
+## 🏗️ Featured Projects
 
-• The /public folder is where you put the images and 3D models.
+---
+
+## 🛠️ Tech Stack
+
+---
+
+## 📫 Connect
+
+- 🌐 Website: https://fineclassicsplugins.com  
+- 🎮 Instagram: https://instagram.com/fineclassicsplugins  
+- 📬 Email: deetznoah@gmail.com  
+
+---
+
+## 📈 GitHub Stats
+
+> *(These auto-update when added to your GitHub profile repo)*
+
+![GitHub Stats](https://github-readme-stats.vercel.app/api?username=deetznoah&show_icons=true&theme=radical)
+
+![Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=deetznoah&layout=compact&theme=radical)
+
+---
+
+## 🧩 Fun Facts
+
+- I design plugin UIs with a retro-console aesthetic.  
+- I love blending **DSP**, **UI shaders**, and **game-inspired interfaces**.  
+- My long-term project is a **hot-reloadable, node-based plugin creator** for musicians.
+
+---
+
+Thanks for stopping by — feel free to explore the repos or reach out!  
+🎸 **Build cool audio stuff. Make noise.**
