@@ -24,6 +24,5 @@
 - 🌐 Website: https://fineclassicsplugins.com  
 - 📬 Email: deetznoah@gmail.com  
 
-
-Thanks for stopping by — feel free to explore the repos or reach out!  
+  
 🎸 **“We’re all capable of extraordinary creativity when we let ourselves play."**
