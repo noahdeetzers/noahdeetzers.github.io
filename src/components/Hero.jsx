@@ -10,7 +10,7 @@ export default function Hero() {
         transition={{ duration: 0.8, ease: 'easeOut' }}
       >
         <h1 className="hero-name">Noah Deetz</h1>
-        <p className="hero-subtitle">Plugin Designer · Audio Developer</p>
+        <p className="hero-subtitle">Product Design · Art · Music</p>
       </motion.div>
       <motion.div
         className="scroll-indicator"
