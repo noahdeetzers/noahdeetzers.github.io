@@ -1,19 +1,21 @@
-import Nav from './components/Nav'
-import Hero from './components/Hero'
-import Projects from './components/Projects'
-import Music from './components/Music'
-import About from './components/About'
-import Contact from './components/Contact'
+import { Routes, Route } from 'react-router-dom'
+import Layout from './components/Layout'
+import Home from './pages/Home'
+import Software from './pages/Software'
+import MusicPage from './pages/Music'
+import Art from './pages/Art'
+import Research from './pages/Research'
 
 export default function App() {
   return (
-    <div className="app">
-      <Nav />
-      <Hero />
-      <About />
-      <Projects />
-      <Music />
-      <Contact />
-    </div>
+    <Routes>
+      <Route element={<Layout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/software" element={<Software />} />
+        <Route path="/music" element={<MusicPage />} />
+        <Route path="/art" element={<Art />} />
+        <Route path="/research" element={<Research />} />
+      </Route>
+    </Routes>
   )
 }

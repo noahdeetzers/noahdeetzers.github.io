@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 
 const links = [
-  { label: 'Projects', href: '#projects' },
-  { label: 'Music', href: '#music' },
-  { label: 'About', href: '#about' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Software', to: '/software' },
+  { label: 'Music', to: '/music' },
+  { label: 'Art', to: '/art' },
+  { label: 'Research', to: '/research' },
 ]
 
 export default function Nav() {
@@ -24,12 +25,12 @@ export default function Nav() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
     >
-      <a href="#" className="nav-logo">Noah Deetz</a>
+      <Link to="/" className="nav-logo">Noah Deetz</Link>
       <div className="nav-links">
         {links.map((link) => (
-          <a key={link.href} href={link.href} className="nav-link">
+          <Link key={link.to} to={link.to} className="nav-link">
             {link.label}
-          </a>
+          </Link>
         ))}
       </div>
     </motion.nav>

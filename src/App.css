@@ -11,7 +11,6 @@
   --card-shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.12);
   --tag-bg: #f0f0f0;
   --divider: #e0e0e0;
-  --section-padding: 72px 0;
   --max-width: 1100px;
   --nav-height: 56px;
 }
@@ -29,7 +28,6 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: var(--nav-height);
 }
 
 body {
@@ -56,6 +54,13 @@ a {
    ======================== */
 .app {
   overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app main {
+  flex: 1;
 }
 
 /* ========================
@@ -105,7 +110,7 @@ a {
 }
 
 /* ========================
-   Hero Section (compact)
+   Hero (Home page)
    ======================== */
 .hero {
   min-height: 50vh;
@@ -114,8 +119,28 @@ a {
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: calc(var(--nav-height) + 32px) 24px 32px;
-  position: relative;
+  padding: calc(var(--nav-height) + 48px) 24px 32px;
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-photo {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.hero-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .hero-name {
@@ -133,76 +158,127 @@ a {
   letter-spacing: 0.02em;
 }
 
-.scroll-indicator {
-  position: absolute;
-  bottom: 20px;
+/* ========================
+   Home About
+   ======================== */
+.home-about {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 24px 48px;
+  text-align: center;
 }
 
-.scroll-arrow {
-  font-size: 1.25rem;
-  color: var(--accent);
-  animation: bounce 2s ease infinite;
-}
-
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-6px);
-  }
-  60% {
-    transform: translateY(-3px);
-  }
+.home-about p {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
 }
 
 /* ========================
-   Section Shared
+   Home Category Grid
    ======================== */
-.projects,
-.about,
-.music {
-  padding: var(--section-padding);
-  max-width: var(--max-width);
+.home-categories {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  max-width: 640px;
   margin: 0 auto;
-  padding-left: 24px;
-  padding-right: 24px;
+  padding: 0 24px 80px;
 }
 
-.projects h2,
-.about h2,
-.contact h2,
-.music h2 {
-  font-size: clamp(1.75rem, 3vw, 2.25rem);
+.category-card {
+  display: block;
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 28px 24px;
+  box-shadow: var(--card-shadow);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  position: relative;
+}
+
+.category-card:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+.category-card h3 {
+  font-size: 1.1rem;
   font-weight: 600;
-  margin-bottom: 36px;
+  margin-bottom: 4px;
+}
+
+.category-card p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0;
+}
+
+.category-arrow {
+  position: absolute;
+  top: 24px;
+  right: 20px;
+  font-size: 1.1rem;
+  color: var(--accent);
+  transition: transform 0.2s ease;
+}
+
+.category-card:hover .category-arrow {
+  transform: translateX(3px);
+}
+
+/* ========================
+   Page Section (shared)
+   ======================== */
+.page-section {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: calc(var(--nav-height) + 48px) 24px 80px;
+}
+
+.page-title {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+.page-subtitle {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  margin-bottom: 48px;
+}
+
+.section-heading {
+  font-size: clamp(1.5rem, 3vw, 1.85rem);
+  font-weight: 600;
+  margin-bottom: 20px;
   letter-spacing: -0.01em;
 }
 
 /* ========================
-   Projects Grid
+   Project Grid (Software)
    ======================== */
-.projects-grid {
+.project-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 28px;
+  gap: 24px;
 }
 
 .project-card {
   background: var(--card-bg);
   border-radius: 12px;
-  overflow: hidden;
   box-shadow: var(--card-shadow);
+  overflow: hidden;
   cursor: pointer;
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .project-card:hover {
   box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
 }
 
 .project-card-image {
-  width: 100%;
   aspect-ratio: 16 / 10;
   overflow: hidden;
   background: #f0f0f0;
@@ -212,23 +288,28 @@ a {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.project-card:hover .project-card-image img {
+  transform: scale(1.03);
 }
 
 .project-card-info {
-  padding: 16px 20px 20px;
+  padding: 20px 24px 24px;
 }
 
 .project-card-info h3 {
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .project-card-info p {
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   color: var(--text-secondary);
-  line-height: 1.5;
-  margin-bottom: 10px;
+  line-height: 1.6;
+  margin-bottom: 12px;
 }
 
 .project-tags {
@@ -315,12 +396,16 @@ a {
 }
 
 /* ========================
-   Music Section
+   Music Players
    ======================== */
-.players-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 28px;
+.music-players {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.music-players .player {
+  max-width: 520px;
 }
 
 .player {
@@ -330,22 +415,6 @@ a {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-}
-
-.player-header {
-  padding: 20px 20px 0;
-}
-
-.player-title {
-  font-size: 0.95rem;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-
-.player-subtitle {
-  font-size: 0.78rem;
-  color: var(--text-secondary);
-  line-height: 1.4;
 }
 
 .player-body {
@@ -365,21 +434,6 @@ a {
 .spotify-embed {
   border-radius: 8px;
   display: block;
-}
-
-.player-placeholder {
-  height: 152px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.player-placeholder-icon {
-  font-size: 2.5rem;
-  color: var(--accent);
-  opacity: 0.5;
 }
 
 .player-track-info {
@@ -445,39 +499,96 @@ a {
 }
 
 /* ========================
-   About Section
+   Art Gallery
    ======================== */
-.about-inner {
+.art-gallery {
   display: flex;
-  gap: 40px;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 32px;
 }
 
-.about-photo {
-  flex-shrink: 0;
-  width: 220px;
+.art-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
 }
 
-.about-photo img {
+.art-card img {
   width: 100%;
-  border-radius: 12px;
+  aspect-ratio: 21 / 9;
   object-fit: cover;
 }
 
-.about-content {
-  flex: 1;
-  min-width: 0;
+.art-card-info {
+  padding: 24px 28px 28px;
 }
 
-.about-content p {
-  font-size: 1.05rem;
+.art-card-info h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.art-card-info p {
+  font-size: 0.95rem;
   color: var(--text-secondary);
-  line-height: 1.7;
-  margin-bottom: 16px;
+  line-height: 1.6;
 }
 
-.about-content p:last-child {
-  margin-bottom: 0;
+/* ========================
+   Research
+   ======================== */
+.research-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 720px;
+}
+
+.research-card {
+  display: block;
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 28px 28px 24px;
+  box-shadow: var(--card-shadow);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.research-card:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+.research-card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+.research-authors {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+}
+
+.research-venue {
+  font-size: 0.85rem;
+  color: var(--accent);
+  font-style: italic;
+  margin-bottom: 14px;
+}
+
+.research-link {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text);
+  transition: opacity 0.2s ease;
+}
+
+.research-card:hover .research-link {
+  opacity: 0.7;
 }
 
 /* ========================
@@ -489,6 +600,12 @@ a {
   border-top: 1px solid var(--divider);
   max-width: var(--max-width);
   margin: 0 auto;
+}
+
+.contact h2 {
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 600;
+  margin-bottom: 16px;
 }
 
 .contact-heading {
@@ -560,36 +677,22 @@ a {
     min-height: 40vh;
   }
 
-  .projects-grid,
-  .players-grid {
+  .hero-photo {
+    width: 110px;
+    height: 110px;
+  }
+
+  .home-categories {
     grid-template-columns: 1fr;
-    gap: 20px;
   }
 
-  .projects h2,
-  .about h2,
-  .contact h2,
-  .music h2 {
-    margin-bottom: 24px;
+  .page-section {
+    padding-left: 20px;
+    padding-right: 20px;
   }
 
-  .projects,
-  .about,
-  .music {
-    padding: 48px 20px;
-  }
-
-  .about-inner {
-    flex-direction: column;
-    gap: 24px;
-  }
-
-  .about-photo {
-    width: 160px;
-  }
-
-  .project-card-info {
-    padding: 14px 16px 16px;
+  .project-grid {
+    grid-template-columns: 1fr;
   }
 
   .contact {
@@ -607,5 +710,9 @@ a {
 
   .player-body {
     min-height: 200px;
+  }
+
+  .art-card img {
+    aspect-ratio: 16 / 9;
   }
 }
