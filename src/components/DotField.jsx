@@ -1,10 +1,11 @@
 import { useEffect, useRef } from 'react'
 
 const DOT_SPACING = 32
-const DOT_BASE_RADIUS = 1
+const DOT_BASE_RADIUS = 1.5
 const MOUSE_RADIUS = 120
 const MAX_DISPLACEMENT = 14
 const EASE = 0.08
+const BEAM_RADIUS = 220
 
 function getDotColor() {
   const raw = getComputedStyle(document.documentElement)
@@ -12,6 +13,13 @@ function getDotColor() {
     .trim()
   const parts = raw.split(',').map(Number)
   return parts.length === 3 ? parts : [180, 180, 180]
+}
+
+function getBeamColor() {
+  const theme = document.documentElement.getAttribute('data-theme')
+  return theme === 'dark'
+    ? 'rgba(255, 255, 255, 0.04)'
+    : 'rgba(0, 0, 0, 0.03)'
 }
 
 export default function DotField() {
@@ -23,13 +31,15 @@ export default function DotField() {
     const ctx = canvas.getContext('2d')
 
     let mouse = { x: -9999, y: -9999 }
+    let smoothMouse = { x: -9999, y: -9999 }
     let dots = []
     let raf
     let dotColor = getDotColor()
+    let beamColor = getBeamColor()
 
-    // Watch for theme changes via attribute mutation
     const observer = new MutationObserver(() => {
       dotColor = getDotColor()
+      beamColor = getBeamColor()
     })
     observer.observe(document.documentElement, {
       attributes: true,
@@ -65,6 +75,27 @@ export default function DotField() {
     function draw() {
       ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
 
+      // Ease the beam position for a smooth trailing feel
+      smoothMouse.x += (mouse.x - smoothMouse.x) * 0.12
+      smoothMouse.y += (mouse.y - smoothMouse.y) * 0.12
+
+      // Draw beam glow
+      if (mouse.x > -9000) {
+        const grad = ctx.createRadialGradient(
+          smoothMouse.x, smoothMouse.y, 0,
+          smoothMouse.x, smoothMouse.y, BEAM_RADIUS,
+        )
+        grad.addColorStop(0, beamColor)
+        grad.addColorStop(1, 'transparent')
+        ctx.fillStyle = grad
+        ctx.fillRect(
+          smoothMouse.x - BEAM_RADIUS,
+          smoothMouse.y - BEAM_RADIUS,
+          BEAM_RADIUS * 2,
+          BEAM_RADIUS * 2,
+        )
+      }
+
       for (const dot of dots) {
         const dx = mouse.x - dot.ox
         const dy = mouse.y - dot.oy
@@ -86,7 +117,7 @@ export default function DotField() {
         const offsetDist = Math.sqrt(
           (dot.x - dot.ox) ** 2 + (dot.y - dot.oy) ** 2,
         )
-        const alpha = 0.18 + Math.min(offsetDist / MAX_DISPLACEMENT, 1) * 0.35
+        const alpha = 0.3 + Math.min(offsetDist / MAX_DISPLACEMENT, 1) * 0.45
 
         ctx.beginPath()
         ctx.arc(dot.x, dot.y, DOT_BASE_RADIUS, 0, Math.PI * 2)
