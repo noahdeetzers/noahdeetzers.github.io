@@ -1,50 +1,75 @@
 export class SynthEngine {
   constructor(ctx, output) {
     this.ctx = ctx
+    this.voices = new Map()
 
     this.filter = ctx.createBiquadFilter()
     this.filter.type = 'lowpass'
     this.filter.frequency.value = 2000
     this.filter.Q.value = 1
+    this.filter.connect(output)
 
-    this.envelope = ctx.createGain()
-    this.envelope.gain.value = 0
-
-    this.filter.connect(this.envelope)
-    this.envelope.connect(output)
-
-    this.osc = null
     this.attack = 0.05
     this.release = 0.3
-    this.playing = false
   }
 
   noteOn(freq, time) {
     const t = time || this.ctx.currentTime
 
-    if (!this.osc) {
-      this.osc = this.ctx.createOscillator()
-      this.osc.type = 'sine'
-      this.osc.frequency.setValueAtTime(freq, t)
-      this.osc.connect(this.filter)
-      this.osc.start(t)
-    } else {
-      this.osc.frequency.setValueAtTime(freq, t)
+    // Release existing voice for this freq to avoid stacking
+    if (this.voices.has(freq)) {
+      this._releaseVoice(freq, t)
     }
 
-    this.envelope.gain.cancelScheduledValues(t)
-    this.envelope.gain.setValueAtTime(this.envelope.gain.value, t)
-    this.envelope.gain.linearRampToValueAtTime(0.4, t + this.attack)
-    this.playing = true
+    const osc = this.ctx.createOscillator()
+    osc.type = 'sine'
+    osc.frequency.setValueAtTime(freq, t)
+
+    const env = this.ctx.createGain()
+    env.gain.setValueAtTime(0.001, t)
+    env.gain.exponentialRampToValueAtTime(0.2, t + Math.max(this.attack, 0.005))
+
+    osc.connect(env)
+    env.connect(this.filter)
+    osc.start(t)
+
+    this.voices.set(freq, { osc, env })
   }
 
-  noteOff(time) {
-    if (!this.osc) return
+  noteOff(freq, time) {
     const t = time || this.ctx.currentTime
-    this.envelope.gain.cancelScheduledValues(t)
-    this.envelope.gain.setValueAtTime(this.envelope.gain.value, t)
-    this.envelope.gain.linearRampToValueAtTime(0, t + this.release)
-    this.playing = false
+    if (freq != null) {
+      this._releaseVoice(freq, t)
+    } else {
+      // Release all voices (keyboard / legacy behavior)
+      for (const f of [...this.voices.keys()]) {
+        this._releaseVoice(f, t)
+      }
+    }
+  }
+
+  _releaseVoice(freq, t) {
+    const voice = this.voices.get(freq)
+    if (!voice) return
+    this.voices.delete(freq)
+
+    const { osc, env } = voice
+    const tau = Math.max(this.release, 0.01) / 5
+
+    // setTargetAtTime avoids the cancelScheduledValues + setValueAtTime
+    // discontinuity that caused crackling — it smoothly decays from
+    // whatever value the gain currently has at time t
+    env.gain.cancelScheduledValues(t)
+    env.gain.setTargetAtTime(0.001, t, tau)
+
+    const stopTime = t + this.release + 0.1
+    try { osc.stop(stopTime) } catch (e) {}
+
+    const delay = Math.max(0, (stopTime - this.ctx.currentTime) * 1000) + 200
+    setTimeout(() => {
+      try { osc.disconnect() } catch (e) {}
+      try { env.disconnect() } catch (e) {}
+    }, delay)
   }
 
   setCutoff(v) {
@@ -64,11 +89,9 @@ export class SynthEngine {
   }
 
   destroy() {
-    if (this.osc) {
-      this.osc.stop()
-      this.osc.disconnect()
+    for (const f of [...this.voices.keys()]) {
+      this._releaseVoice(f, this.ctx.currentTime)
     }
     this.filter.disconnect()
-    this.envelope.disconnect()
   }
 }

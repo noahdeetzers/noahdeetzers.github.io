@@ -6,6 +6,7 @@ import DrumDevice from './drum/DrumDevice'
 import SynthSeqDevice from './sequencer/SynthSeqDevice'
 import DrumSeqDevice from './sequencer/DrumSeqDevice'
 import FxDevice from './fx/FxDevice'
+import TransportBar from './TransportBar'
 import Mixer from './mixer/Mixer'
 import Speakers from './Speakers'
 import CableOverlay from './CableOverlay'
@@ -43,6 +44,11 @@ export default function StudioPanel({ open }) {
           }}
         >
           <div className="studio-devices">
+            {/* Shared transport */}
+            <div className="studio-row studio-row--center">
+              <TransportBar />
+            </div>
+
             {/* Two-column layout: Synth chain | Drum chain */}
             <div className="studio-columns">
               <div className="studio-column">

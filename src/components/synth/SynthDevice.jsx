@@ -26,8 +26,8 @@ export default function SynthDevice() {
       const engine = ensureEngine()
       engine.noteOn(freq, time)
     })
-    const offOff = on('synth:noteOff', ({ time }) => {
-      if (engineRef.current) engineRef.current.noteOff(time)
+    const offOff = on('synth:noteOff', ({ freq, time }) => {
+      if (engineRef.current) engineRef.current.noteOff(freq, time)
     })
     return () => { offOn(); offOff(); if (engineRef.current) engineRef.current.destroy() }
   }, [])
