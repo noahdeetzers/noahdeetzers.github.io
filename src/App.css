@@ -906,7 +906,7 @@ a {
 .seq-row {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 1px;
 }
 
 .seq-ch-label {
@@ -921,7 +921,8 @@ a {
 }
 
 .seq-step {
-  width: 14px;
+  flex: 1;
+  min-width: 0;
   height: 14px;
   border-radius: 2px;
   border: 1px solid var(--divider);
@@ -929,6 +930,8 @@ a {
   cursor: pointer;
   padding: 0;
   transition: background 0.08s ease, border-color 0.08s ease;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .seq-step--beat {
@@ -980,12 +983,89 @@ a {
 }
 
 /* ========================
+   Sequencer Params
+   ======================== */
+.seq-params {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.seq-param {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.seq-param-label {
+  font-size: 0.45rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin-right: 2px;
+}
+
+.seq-param-btn {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border: 1px solid var(--divider);
+  background: var(--bg);
+  color: var(--text-secondary);
+  font-size: 0.6rem;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  transition: border-color 0.1s ease;
+  line-height: 1;
+}
+
+.seq-param-btn:hover {
+  border-color: var(--text-secondary);
+}
+
+.seq-param-value {
+  font-size: 0.5rem;
+  font-weight: 600;
+  color: var(--text);
+  min-width: 16px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.seq-param-rate {
+  font-size: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  background: var(--bg);
+  border: 1px solid var(--divider);
+  border-radius: 3px;
+  padding: 2px 6px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.1s ease, color 0.1s ease;
+}
+
+.seq-param-rate:hover {
+  border-color: var(--text-secondary);
+  color: var(--text);
+}
+
+/* ========================
    Synth Sequencer Grid
    ======================== */
 .synth-seq .seq-step {
-  width: 18px;
   height: 12px;
-  border-radius: 2px;
+}
+
+.synth-seq .seq-rows {
+  gap: 1px;
 }
 
 .seq-ch-label--sharp {
@@ -996,9 +1076,7 @@ a {
    Drum Sequencer Grid
    ======================== */
 .drum-seq .seq-step {
-  width: 18px;
   height: 14px;
-  border-radius: 2px;
 }
 
 /* ========================

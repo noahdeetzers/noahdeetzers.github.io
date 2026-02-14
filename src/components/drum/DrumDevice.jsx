@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState, useCallback } from 'react'
 import { getAudioContext, getDrumBus } from '../../audio/audioEngine'
 import { on } from '../../audio/audioBus'
 import { DrumEngine } from '../../audio/drumEngine'
@@ -17,7 +17,8 @@ const PADS = [
 
 export default function DrumDevice() {
   const engineRef = useRef(null)
-  const [flashPad, setFlashPad] = useState(null)
+  const [flashPads, setFlashPads] = useState(new Set())
+  const timersRef = useRef(new Map())
 
   function ensureEngine() {
     if (!engineRef.current) {
@@ -28,21 +29,34 @@ export default function DrumDevice() {
     return engineRef.current
   }
 
+  const flashPad = useCallback((type) => {
+    setFlashPads(prev => new Set([...prev, type]))
+    // Clear previous timer for this type if retriggered quickly
+    const prev = timersRef.current.get(type)
+    if (prev) clearTimeout(prev)
+    timersRef.current.set(type, setTimeout(() => {
+      setFlashPads(p => {
+        const next = new Set(p)
+        next.delete(type)
+        return next
+      })
+      timersRef.current.delete(type)
+    }, 100))
+  }, [])
+
   useEffect(() => {
     const off = on('drum:trigger', ({ type, time }) => {
       const engine = ensureEngine()
       engine.trigger(type, time)
-      setFlashPad(type)
-      setTimeout(() => setFlashPad(null), 100)
+      flashPad(type)
     })
-    return () => { off(); }
-  }, [])
+    return () => { off() }
+  }, [flashPad])
 
   function handleTrigger(type) {
     const engine = ensureEngine()
     engine.trigger(type)
-    setFlashPad(type)
-    setTimeout(() => setFlashPad(null), 100)
+    flashPad(type)
   }
 
   return (
@@ -52,7 +66,7 @@ export default function DrumDevice() {
           <DrumPad
             key={p.type}
             label={p.label}
-            active={flashPad === p.type}
+            active={flashPads.has(p.type)}
             onTrigger={() => handleTrigger(p.type)}
           />
         ))}

@@ -17,6 +17,9 @@ export const SYNTH_NOTES = [
 
 export const DRUM_TYPES = ['kick', 'snare', 'hat', 'clap', 'tom', 'rim', 'perc', 'cowbell']
 
+export const RATES = [0.25, 1 / 3, 0.5, 1, 2, 3, 4]
+export const RATE_LABELS = ['\u00F74', '\u00F73', '\u00F72', '1\u00D7', '2\u00D7', '3\u00D7', '4\u00D7']
+
 let instance = null
 
 export function getSequencer(ctx) {
@@ -30,23 +33,32 @@ class SequencerEngine {
   constructor(ctx) {
     this.ctx = ctx
     this.tempo = 120
-    this.steps = 8
-    this.currentStep = 0
     this.isPlaying = false
-    this.nextStepTime = 0
     this.timerID = null
 
-    // 12 notes x 8 steps
+    // Synth track
+    this.synthSteps = 8
+    this.synthRate = 1
+    this.synthStep = 0
+    this.synthNextTime = 0
     this.synthGrid = SYNTH_NOTES.map(() => new Array(8).fill(false))
-    // 8 drum types x 8 steps
+
+    // Drum track
+    this.drumSteps = 8
+    this.drumRate = 1
+    this.drumStep = 0
+    this.drumNextTime = 0
     this.drumGrid = DRUM_TYPES.map(() => new Array(8).fill(false))
   }
 
   start() {
     if (this.isPlaying) return
     this.isPlaying = true
-    this.currentStep = 0
-    this.nextStepTime = this.ctx.currentTime
+    this.synthStep = 0
+    this.drumStep = 0
+    const now = this.ctx.currentTime
+    this.synthNextTime = now
+    this.drumNextTime = now
     this._schedule()
   }
 
@@ -54,42 +66,51 @@ class SequencerEngine {
     this.isPlaying = false
     if (this.timerID) clearTimeout(this.timerID)
     this.timerID = null
-    this.currentStep = 0
-    emit('transport:step', { step: -1 })
+    this.synthStep = 0
+    this.drumStep = 0
+    emit('transport:synthStep', { step: -1 })
+    emit('transport:drumStep', { step: -1 })
   }
 
-  setTempo(bpm) {
-    this.tempo = bpm
-  }
+  setTempo(bpm) { this.tempo = bpm }
+  setSynthRate(r) { this.synthRate = r }
+  setDrumRate(r) { this.drumRate = r }
+  setSynthSteps(n) { this.synthSteps = n }
+  setDrumSteps(n) { this.drumSteps = n }
 
   _schedule() {
     if (!this.isPlaying) return
     const lookAhead = 0.1
-    const stepDur = 60 / this.tempo / 4
+    const baseStepDur = 60 / this.tempo / 4
 
-    while (this.nextStepTime < this.ctx.currentTime + lookAhead) {
-      const step = this.currentStep
-
-      // Synth notes (polyphonic — all active notes at this step fire)
+    // -- Synth track --
+    const synthDur = baseStepDur / this.synthRate
+    while (this.synthNextTime < this.ctx.currentTime + lookAhead) {
+      const step = this.synthStep
       for (let n = 0; n < SYNTH_NOTES.length; n++) {
-        if (this.synthGrid[n][step]) {
+        if (this.synthGrid[n] && this.synthGrid[n][step]) {
           const freq = SYNTH_NOTES[n].freq
-          emit('synth:noteOn', { freq, time: this.nextStepTime })
-          emit('synth:noteOff', { freq, time: this.nextStepTime + stepDur * 0.8 })
+          emit('synth:noteOn', { freq, time: this.synthNextTime })
+          emit('synth:noteOff', { freq, time: this.synthNextTime + synthDur * 0.8 })
         }
       }
+      emit('transport:synthStep', { step })
+      this.synthNextTime += synthDur
+      this.synthStep = (this.synthStep + 1) % this.synthSteps
+    }
 
-      // Drum triggers
+    // -- Drum track --
+    const drumDur = baseStepDur / this.drumRate
+    while (this.drumNextTime < this.ctx.currentTime + lookAhead) {
+      const step = this.drumStep
       for (let d = 0; d < DRUM_TYPES.length; d++) {
-        if (this.drumGrid[d][step]) {
-          emit('drum:trigger', { type: DRUM_TYPES[d], time: this.nextStepTime })
+        if (this.drumGrid[d] && this.drumGrid[d][step]) {
+          emit('drum:trigger', { type: DRUM_TYPES[d], time: this.drumNextTime })
         }
       }
-
-      emit('transport:step', { step })
-
-      this.nextStepTime += stepDur
-      this.currentStep = (this.currentStep + 1) % this.steps
+      emit('transport:drumStep', { step })
+      this.drumNextTime += drumDur
+      this.drumStep = (this.drumStep + 1) % this.drumSteps
     }
 
     this.timerID = setTimeout(() => this._schedule(), 25)
