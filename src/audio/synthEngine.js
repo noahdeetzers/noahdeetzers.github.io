@@ -19,31 +19,31 @@ export class SynthEngine {
     this.playing = false
   }
 
-  noteOn(freq) {
-    const now = this.ctx.currentTime
+  noteOn(freq, time) {
+    const t = time || this.ctx.currentTime
 
     if (!this.osc) {
       this.osc = this.ctx.createOscillator()
       this.osc.type = 'sine'
-      this.osc.frequency.setValueAtTime(freq, now)
+      this.osc.frequency.setValueAtTime(freq, t)
       this.osc.connect(this.filter)
-      this.osc.start()
+      this.osc.start(t)
     } else {
-      this.osc.frequency.setValueAtTime(freq, now)
+      this.osc.frequency.setValueAtTime(freq, t)
     }
 
-    this.envelope.gain.cancelScheduledValues(now)
-    this.envelope.gain.setValueAtTime(this.envelope.gain.value, now)
-    this.envelope.gain.linearRampToValueAtTime(0.4, now + this.attack)
+    this.envelope.gain.cancelScheduledValues(t)
+    this.envelope.gain.setValueAtTime(this.envelope.gain.value, t)
+    this.envelope.gain.linearRampToValueAtTime(0.4, t + this.attack)
     this.playing = true
   }
 
-  noteOff() {
-    if (!this.playing) return
-    const now = this.ctx.currentTime
-    this.envelope.gain.cancelScheduledValues(now)
-    this.envelope.gain.setValueAtTime(this.envelope.gain.value, now)
-    this.envelope.gain.linearRampToValueAtTime(0, now + this.release)
+  noteOff(time) {
+    if (!this.osc) return
+    const t = time || this.ctx.currentTime
+    this.envelope.gain.cancelScheduledValues(t)
+    this.envelope.gain.setValueAtTime(this.envelope.gain.value, t)
+    this.envelope.gain.linearRampToValueAtTime(0, t + this.release)
     this.playing = false
   }
 

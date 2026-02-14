@@ -756,7 +756,7 @@ a {
   padding: 14px 16px 16px;
   width: 240px;
   position: absolute;
-  left: calc(50% - 440px);
+  left: calc(50% - 632px);
   top: 80px;
 }
 
@@ -823,6 +823,191 @@ a {
 }
 
 /* ========================
+   Drum Device
+   ======================== */
+.drum-device {
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  padding: 14px;
+  position: absolute;
+  left: calc(50% - 632px);
+  top: 320px;
+}
+
+.drum-pads {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.drum-pad {
+  width: 42px;
+  height: 42px;
+  border-radius: 6px;
+  border: 1px solid var(--divider);
+  background: var(--bg);
+  color: var(--text-secondary);
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: background 0.08s ease;
+  padding: 0;
+  font-family: inherit;
+}
+
+.drum-pad:hover {
+  border-color: var(--text-secondary);
+}
+
+.drum-pad--active {
+  background: var(--text-secondary);
+  color: var(--card-bg);
+}
+
+/* ========================
+   Sequencer Device
+   ======================== */
+.seq-device {
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  padding: 14px 16px;
+  position: absolute;
+  left: calc(50% + 392px);
+  top: 80px;
+}
+
+.seq-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.seq-play {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--divider);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: border-color 0.15s ease;
+}
+
+.seq-play:hover {
+  border-color: var(--text-secondary);
+}
+
+.seq-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.seq-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.seq-ch-label {
+  font-size: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  width: 28px;
+  flex-shrink: 0;
+  text-align: right;
+  padding-right: 6px;
+}
+
+.seq-step {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  border: 1px solid var(--divider);
+  background: var(--bg);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.08s ease, border-color 0.08s ease;
+}
+
+.seq-step--beat {
+  border-color: var(--accent);
+}
+
+.seq-step--on {
+  background: var(--text-secondary);
+  border-color: var(--text-secondary);
+}
+
+.seq-step--active {
+  box-shadow: 0 0 6px rgba(var(--dot-color), 0.5);
+}
+
+.seq-step--ch2.seq-step--on {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ========================
+   FX Device (Pedalboard)
+   ======================== */
+.fx-device {
+  display: flex;
+  gap: 8px;
+  position: absolute;
+  left: calc(50% + 392px);
+  top: 300px;
+}
+
+.pedal {
+  background: var(--card-bg);
+  border-radius: 10px;
+  box-shadow: var(--card-shadow);
+  padding: 10px 12px 12px;
+  text-align: center;
+}
+
+.pedal-label {
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.pedal-knobs {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+/* ========================
+   Speakers
+   ======================== */
+.speakers {
+  display: flex;
+  gap: 14px;
+  position: absolute;
+  left: calc(50% + 392px);
+  top: 470px;
+}
+
+.speaker {
+  transition: transform 0.05s ease-out;
+}
+
+/* ========================
    Responsive
    ======================== */
 @media (max-width: 768px) {
@@ -881,7 +1066,14 @@ a {
     aspect-ratio: 16 / 9;
   }
 
-  .synth-device {
+}
+
+@media (max-width: 1399px) {
+  .synth-device,
+  .drum-device,
+  .seq-device,
+  .fx-device,
+  .speakers {
     display: none;
   }
 }

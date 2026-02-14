@@ -5,6 +5,10 @@ import DotField from '../components/DotField'
 import FabricWarp from '../components/FabricWarp'
 import FabricText from '../components/FabricText'
 import SynthDevice from '../components/synth/SynthDevice'
+import DrumDevice from '../components/drum/DrumDevice'
+import SeqDevice from '../components/sequencer/SeqDevice'
+import FxDevice from '../components/fx/FxDevice'
+import Speakers from '../components/Speakers'
 
 const categories = [
   { label: 'Software', path: '/software', desc: 'Audio plugins & tools' },
@@ -26,6 +30,22 @@ export default function Home() {
 
       <FabricWarp intensity={0.6}>
         <SynthDevice />
+      </FabricWarp>
+
+      <FabricWarp intensity={0.6}>
+        <DrumDevice />
+      </FabricWarp>
+
+      <FabricWarp intensity={0.5}>
+        <SeqDevice />
+      </FabricWarp>
+
+      <FabricWarp intensity={0.5}>
+        <FxDevice />
+      </FabricWarp>
+
+      <FabricWarp intensity={0.4}>
+        <Speakers />
       </FabricWarp>
 
       <section className="hero">
