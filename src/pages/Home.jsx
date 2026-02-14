@@ -12,6 +12,12 @@ const categories = [
   { label: 'Research', path: '/research', desc: 'Published papers' },
 ]
 
+function handleCardMove(e) {
+  const rect = e.currentTarget.getBoundingClientRect()
+  e.currentTarget.style.setProperty('--glow-x', `${e.clientX - rect.left}px`)
+  e.currentTarget.style.setProperty('--glow-y', `${e.clientY - rect.top}px`)
+}
+
 export default function Home() {
   return (
     <>
@@ -49,7 +55,13 @@ export default function Home() {
         {categories.map((cat, i) => (
           <FadeIn key={cat.path} delay={i * 0.1}>
             <FabricWarp intensity={1}>
-              <Link to={cat.path} className="category-card" data-fabric-exclude>
+              <Link
+                to={cat.path}
+                className="category-card"
+                data-fabric-exclude
+                data-beam-block
+                onMouseMove={handleCardMove}
+              >
                 <h3>{cat.label}</h3>
                 <p>{cat.desc}</p>
                 <span className="category-arrow">&rarr;</span>

@@ -38,6 +38,16 @@ function getExcludeRects() {
   return rects
 }
 
+function getBeamBlockRects() {
+  const els = document.querySelectorAll('[data-beam-block]')
+  const rects = []
+  for (const el of els) {
+    const r = el.getBoundingClientRect()
+    rects.push({ left: r.left, top: r.top, right: r.right, bottom: r.bottom })
+  }
+  return rects
+}
+
 function inExcludeZone(x, y, rects) {
   for (const r of rects) {
     if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) {
@@ -62,6 +72,8 @@ export default function DotField() {
     let dotColor = getDotColor()
     let beamColor = getBeamColor()
     let excludeRects = []
+    let beamBlockRects = []
+    let beamOpacity = 1
     let frameCount = 0
 
     const observer = new MutationObserver(() => {
@@ -82,6 +94,7 @@ export default function DotField() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
       buildGrid()
       excludeRects = getExcludeRects()
+      beamBlockRects = getBeamBlockRects()
     }
 
     function buildGrid() {
@@ -104,16 +117,23 @@ export default function DotField() {
     function draw() {
       ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
 
-      // Refresh exclude rects every 10 frames (elements may animate in)
+      // Refresh rects every 10 frames (elements may animate in)
       if (frameCount % 10 === 0) {
         excludeRects = getExcludeRects()
+        beamBlockRects = getBeamBlockRects()
       }
       frameCount++
+
+      // Fade beam when mouse is over a card
+      const overCard = inExcludeZone(mouse.x, mouse.y, beamBlockRects)
+      const targetBeamOpacity = overCard ? 0 : 1
+      beamOpacity += (targetBeamOpacity - beamOpacity) * 0.12
 
       smoothMouse.x += (mouse.x - smoothMouse.x) * 0.12
       smoothMouse.y += (mouse.y - smoothMouse.y) * 0.12
 
-      if (mouse.x > -9000) {
+      if (mouse.x > -9000 && beamOpacity > 0.01) {
+        ctx.globalAlpha = beamOpacity
         const grad = ctx.createRadialGradient(
           smoothMouse.x, smoothMouse.y, 0,
           smoothMouse.x, smoothMouse.y, BEAM_RADIUS,
@@ -127,6 +147,7 @@ export default function DotField() {
           BEAM_RADIUS * 2,
           BEAM_RADIUS * 2,
         )
+        ctx.globalAlpha = 1
       }
 
       for (const dot of dots) {
