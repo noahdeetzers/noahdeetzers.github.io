@@ -868,6 +868,7 @@ a {
   border-radius: 12px;
   box-shadow: var(--card-shadow);
   padding: 14px 16px;
+  width: 20rem;
 }
 
 .seq-controls {
@@ -980,6 +981,14 @@ a {
   border-radius: 10px;
   box-shadow: var(--card-shadow);
   padding: 8px 16px;
+}
+
+.transport-bpm {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  min-width: 28px;
 }
 
 /* ========================
@@ -1270,7 +1279,7 @@ a {
   top: var(--nav-height);
   left: 0;
   bottom: 0;
-  width: 700px;
+  width: 900px;
   z-index: 100;
   background: rgba(250, 250, 250, 0.8);
   backdrop-filter: blur(16px);
@@ -1288,8 +1297,8 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 32px;
-  padding: 32px 24px;
+  gap: 20px;
+  padding: 20px 16px;
 }
 
 .studio-row {
@@ -1304,6 +1313,8 @@ a {
 
 .studio-row--center {
   justify-content: center;
+  align-items: center;
+  gap: 14px;
 }
 
 /* ========================
@@ -1314,7 +1325,7 @@ a {
 }
 
 .home-content--shifted {
-  margin-left: 700px;
+  margin-left: 900px;
 }
 
 /* ========================

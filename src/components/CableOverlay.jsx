@@ -15,8 +15,8 @@ const CABLE_DEFS = [
   { from: 'synth-reverb', fromSide: 'bottom', to: 'mixer', toSide: 'top', color: 'var(--text-secondary)' },
   { from: 'drum-reverb', fromSide: 'bottom', to: 'mixer', toSide: 'top', color: 'var(--text-secondary)' },
   // Output
-  { from: 'mixer', fromSide: 'bottom', to: 'spk-left', toSide: 'top', color: 'var(--text-secondary)' },
-  { from: 'mixer', fromSide: 'bottom', to: 'spk-right', toSide: 'top', color: 'var(--text-secondary)' },
+  { from: 'mixer', fromSide: 'right', to: 'spk-left', toSide: 'left', color: 'var(--text-secondary)' },
+  { from: 'mixer', fromSide: 'right', to: 'spk-right', toSide: 'left', color: 'var(--text-secondary)' },
 ]
 
 function getPortPoint(el, side) {

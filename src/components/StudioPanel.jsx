@@ -75,15 +75,11 @@ export default function StudioPanel({ open }) {
               </div>
             </div>
 
-            {/* Full-width: Mixer */}
+            {/* Mixer + Speakers */}
             <div className="studio-row studio-row--center">
               <FabricWarp intensity={0.4}>
                 <Mixer />
               </FabricWarp>
-            </div>
-
-            {/* Full-width: Speakers */}
-            <div className="studio-row studio-row--center">
               <FabricWarp intensity={0.4}>
                 <Speakers />
               </FabricWarp>

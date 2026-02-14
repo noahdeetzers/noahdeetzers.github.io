@@ -45,6 +45,7 @@ export default function TransportBar() {
         {playing ? '\u25A0' : '\u25B6'}
       </button>
       <Knob label="BPM" min={60} max={200} value={tempo} onChange={onTempo} size={36} />
+      <span className="transport-bpm">{Math.round(tempo)}</span>
     </div>
   )
 }
