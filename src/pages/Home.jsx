@@ -19,6 +19,46 @@ function handleCardMove(e) {
   e.currentTarget.style.setProperty('--glow-y', `${e.clientY - rect.top}px`)
 }
 
+// Stagger children in the hero
+const heroContainer = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.22, delayChildren: 0.1 },
+  },
+}
+
+const heroPhoto = {
+  hidden: { opacity: 0, scale: 0.6, filter: 'blur(18px)' },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    filter: 'blur(0px)',
+    transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] },
+  },
+}
+
+const heroName = {
+  hidden: { opacity: 0, y: 35, filter: 'blur(10px)' },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] },
+  },
+}
+
+const heroSub = {
+  hidden: { opacity: 0, y: 18 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: 'easeOut' },
+  },
+}
+
+// Cards — scroll-triggered with scale + slide
+const cardEase = [0.16, 1, 0.3, 1]
+
 export default function Home() {
   const { studioOpen } = useOutletContext()
 
@@ -32,21 +72,27 @@ export default function Home() {
         <section className="hero">
           <motion.div
             className="hero-content"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
+            variants={heroContainer}
+            initial="hidden"
+            animate="visible"
           >
-            <FabricWarp intensity={1.4}>
-              <div className="hero-photo" data-fabric-exclude>
-                <img src="/media/bio-photo.jpg" alt="Noah Deetz" />
-              </div>
-            </FabricWarp>
-            <FabricText as="h1" className="hero-name" intensity={1.2}>
-              Noah Deetz
-            </FabricText>
-            <FabricText as="p" className="hero-subtitle" intensity={0.8}>
-              Plugin Designer · Creative Technologist · Musician
-            </FabricText>
+            <motion.div variants={heroPhoto}>
+              <FabricWarp intensity={1.4}>
+                <div className="hero-photo" data-fabric-exclude>
+                  <img src="/media/bio-photo.jpg" alt="Noah Deetz" />
+                </div>
+              </FabricWarp>
+            </motion.div>
+            <motion.div variants={heroName}>
+              <FabricText as="h1" className="hero-name" intensity={1.2}>
+                Noah Deetz
+              </FabricText>
+            </motion.div>
+            <motion.div variants={heroSub}>
+              <FabricText as="p" className="hero-subtitle" intensity={0.8}>
+                Plugin Designer · Creative Technologist · Musician
+              </FabricText>
+            </motion.div>
           </motion.div>
         </section>
 
@@ -60,7 +106,17 @@ export default function Home() {
 
         <section className="home-categories">
           {categories.map((cat, i) => (
-            <FadeIn key={cat.path} delay={i * 0.1}>
+            <motion.div
+              key={cat.path}
+              initial={{ opacity: 0, y: 55, scale: 0.92 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: '-30px' }}
+              transition={{
+                delay: i * 0.1,
+                duration: 0.65,
+                ease: cardEase,
+              }}
+            >
               <FabricWarp intensity={1}>
                 <Link
                   to={cat.path}
@@ -74,7 +130,7 @@ export default function Home() {
                   <span className="category-arrow">&rarr;</span>
                 </Link>
               </FabricWarp>
-            </FadeIn>
+            </motion.div>
           ))}
         </section>
       </div>
