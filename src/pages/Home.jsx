@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import FadeIn from '../components/FadeIn'
+import DotField from '../components/DotField'
 
 const categories = [
   { label: 'Software', path: '/software', desc: 'Audio plugins & tools' },
@@ -12,6 +13,7 @@ const categories = [
 export default function Home() {
   return (
     <>
+      <DotField />
       <section className="hero">
         <motion.div
           className="hero-content"
