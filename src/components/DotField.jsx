@@ -6,6 +6,7 @@ const MOUSE_RADIUS = 120
 const MAX_DISPLACEMENT = 14
 const EASE = 0.08
 const BEAM_RADIUS = 220
+const EXCLUDE_PAD = 12
 
 function getDotColor() {
   const raw = getComputedStyle(document.documentElement)
@@ -22,6 +23,30 @@ function getBeamColor() {
     : 'rgba(0, 0, 0, 0.03)'
 }
 
+function getExcludeRects() {
+  const els = document.querySelectorAll('[data-fabric-exclude]')
+  const rects = []
+  for (const el of els) {
+    const r = el.getBoundingClientRect()
+    rects.push({
+      left: r.left - EXCLUDE_PAD,
+      top: r.top - EXCLUDE_PAD,
+      right: r.right + EXCLUDE_PAD,
+      bottom: r.bottom + EXCLUDE_PAD,
+    })
+  }
+  return rects
+}
+
+function inExcludeZone(x, y, rects) {
+  for (const r of rects) {
+    if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) {
+      return true
+    }
+  }
+  return false
+}
+
 export default function DotField() {
   const canvasRef = useRef(null)
 
@@ -36,6 +61,8 @@ export default function DotField() {
     let raf
     let dotColor = getDotColor()
     let beamColor = getBeamColor()
+    let excludeRects = []
+    let frameCount = 0
 
     const observer = new MutationObserver(() => {
       dotColor = getDotColor()
@@ -54,6 +81,7 @@ export default function DotField() {
       canvas.style.height = window.innerHeight + 'px'
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
       buildGrid()
+      excludeRects = getExcludeRects()
     }
 
     function buildGrid() {
@@ -67,6 +95,7 @@ export default function DotField() {
             oy: r * DOT_SPACING,
             x: c * DOT_SPACING,
             y: r * DOT_SPACING,
+            alpha: 0,
           })
         }
       }
@@ -75,11 +104,15 @@ export default function DotField() {
     function draw() {
       ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
 
-      // Ease the beam position for a smooth trailing feel
+      // Refresh exclude rects every 10 frames (elements may animate in)
+      if (frameCount % 10 === 0) {
+        excludeRects = getExcludeRects()
+      }
+      frameCount++
+
       smoothMouse.x += (mouse.x - smoothMouse.x) * 0.12
       smoothMouse.y += (mouse.y - smoothMouse.y) * 0.12
 
-      // Draw beam glow
       if (mouse.x > -9000) {
         const grad = ctx.createRadialGradient(
           smoothMouse.x, smoothMouse.y, 0,
@@ -97,6 +130,12 @@ export default function DotField() {
       }
 
       for (const dot of dots) {
+        const excluded = inExcludeZone(dot.ox, dot.oy, excludeRects)
+        const targetAlpha = excluded ? 0 : 1
+        dot.alpha += (targetAlpha - dot.alpha) * 0.06
+
+        if (dot.alpha < 0.01) continue
+
         const dx = mouse.x - dot.ox
         const dy = mouse.y - dot.oy
         const dist = Math.sqrt(dx * dx + dy * dy)
@@ -117,7 +156,8 @@ export default function DotField() {
         const offsetDist = Math.sqrt(
           (dot.x - dot.ox) ** 2 + (dot.y - dot.oy) ** 2,
         )
-        const alpha = 0.3 + Math.min(offsetDist / MAX_DISPLACEMENT, 1) * 0.45
+        const baseAlpha = 0.3 + Math.min(offsetDist / MAX_DISPLACEMENT, 1) * 0.45
+        const alpha = baseAlpha * dot.alpha
 
         ctx.beginPath()
         ctx.arc(dot.x, dot.y, DOT_BASE_RADIUS, 0, Math.PI * 2)
