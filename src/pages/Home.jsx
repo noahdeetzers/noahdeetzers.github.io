@@ -4,6 +4,7 @@ import FadeIn from '../components/FadeIn'
 import DotField from '../components/DotField'
 import FabricWarp from '../components/FabricWarp'
 import FabricText from '../components/FabricText'
+import SynthDevice from '../components/synth/SynthDevice'
 
 const categories = [
   { label: 'Software', path: '/software', desc: 'Audio plugins & tools' },
@@ -20,8 +21,13 @@ function handleCardMove(e) {
 
 export default function Home() {
   return (
-    <>
+    <div className="home-studio">
       <DotField />
+
+      <FabricWarp intensity={0.6}>
+        <SynthDevice />
+      </FabricWarp>
+
       <section className="hero">
         <motion.div
           className="hero-content"
@@ -70,6 +76,6 @@ export default function Home() {
           </FadeIn>
         ))}
       </section>
-    </>
+    </div>
   )
 }

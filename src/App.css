@@ -743,6 +743,86 @@ a {
 }
 
 /* ========================
+   Synth Device
+   ======================== */
+.home-studio {
+  position: relative;
+}
+
+.synth-device {
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  padding: 14px 16px 16px;
+  width: 240px;
+  position: absolute;
+  left: calc(50% - 440px);
+  top: 80px;
+}
+
+.synth-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.synth-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.synth-knobs {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding: 0 2px;
+}
+
+.synth-knob-label {
+  font-size: 0.55rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.synth-keys-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+/* Mini keyboard */
+.mini-key {
+  border-radius: 0 0 3px 3px;
+  transition: background 0.08s ease;
+  touch-action: none;
+}
+
+.mini-key--white {
+  background: var(--bg);
+  border: 1px solid var(--divider);
+}
+
+.mini-key--white.mini-key--active {
+  background: var(--divider);
+}
+
+.mini-key--black {
+  background: var(--text);
+  border: 1px solid var(--text);
+  border-radius: 0 0 2px 2px;
+}
+
+.mini-key--black.mini-key--active-black {
+  background: var(--text-secondary);
+}
+
+/* ========================
    Responsive
    ======================== */
 @media (max-width: 768px) {
@@ -799,5 +879,9 @@ a {
 
   .art-card img {
     aspect-ratio: 16 / 9;
+  }
+
+  .synth-device {
+    display: none;
   }
 }
