@@ -755,9 +755,6 @@ a {
   box-shadow: var(--card-shadow);
   padding: 14px 16px 16px;
   width: 240px;
-  position: absolute;
-  left: calc(50% - 632px);
-  top: 80px;
 }
 
 .synth-header {
@@ -830,9 +827,6 @@ a {
   border-radius: 12px;
   box-shadow: var(--card-shadow);
   padding: 14px;
-  position: absolute;
-  left: calc(50% - 632px);
-  top: 320px;
 }
 
 .drum-pads {
@@ -874,9 +868,6 @@ a {
   border-radius: 12px;
   box-shadow: var(--card-shadow);
   padding: 14px 16px;
-  position: absolute;
-  left: calc(50% + 392px);
-  top: 80px;
 }
 
 .seq-controls {
@@ -964,9 +955,6 @@ a {
 .fx-device {
   display: flex;
   gap: 8px;
-  position: absolute;
-  left: calc(50% + 392px);
-  top: 300px;
 }
 
 .pedal {
@@ -998,9 +986,6 @@ a {
 .speakers {
   display: flex;
   gap: 14px;
-  position: absolute;
-  left: calc(50% + 392px);
-  top: 470px;
 }
 
 .speaker {
@@ -1068,12 +1053,157 @@ a {
 
 }
 
-@media (max-width: 1399px) {
-  .synth-device,
-  .drum-device,
-  .seq-device,
-  .fx-device,
-  .speakers {
-    display: none;
+/* ========================
+   Studio Toggle (Nav button)
+   ======================== */
+.studio-toggle {
+  background: none;
+  border: 1px solid var(--divider);
+  border-radius: 6px;
+  padding: 4px 12px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 450;
+  font-family: inherit;
+  color: var(--text-secondary);
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.studio-toggle:hover {
+  color: var(--text);
+  border-color: var(--text-secondary);
+}
+
+.studio-toggle--active {
+  color: var(--text);
+  border-color: var(--text);
+}
+
+/* ========================
+   Studio Panel
+   ======================== */
+.studio-panel {
+  position: fixed;
+  top: var(--nav-height);
+  left: 0;
+  bottom: 0;
+  width: 420px;
+  z-index: 100;
+  background: rgba(250, 250, 250, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-right: 1px solid var(--divider);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+[data-theme="dark"] .studio-panel {
+  background: rgba(17, 17, 17, 0.8);
+}
+
+.studio-devices {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  padding: 32px 24px;
+}
+
+.studio-row {
+  display: flex;
+  justify-content: center;
+}
+
+.studio-row--pair {
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.studio-row--center {
+  justify-content: center;
+}
+
+/* ========================
+   Home Content (slide)
+   ======================== */
+.home-content {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.home-content--shifted {
+  transform: translateX(420px);
+}
+
+/* ========================
+   Cable Overlay
+   ======================== */
+.cable-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: visible;
+}
+
+.cable-shadow {
+  fill: none;
+  stroke-width: 6;
+  opacity: 0.1;
+  stroke-linecap: round;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: cable-draw 0.6s ease-out forwards;
+}
+
+.cable {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.5;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: cable-draw 0.6s ease-out forwards;
+  transition: opacity 0.2s ease, stroke-width 0.2s ease;
+}
+
+.cable--hovered {
+  opacity: 0.85;
+  stroke-width: 3;
+}
+
+.cable-hitarea {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 16;
+  stroke-linecap: round;
+  pointer-events: stroke;
+}
+
+@keyframes cable-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ========================
+   Studio Panel Responsive
+   ======================== */
+@media (max-width: 1023px) {
+  .studio-panel {
+    width: 100%;
+    border-right: none;
+  }
+
+  .home-content--shifted {
+    transform: none;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .home-content {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.3s ease;
   }
 }

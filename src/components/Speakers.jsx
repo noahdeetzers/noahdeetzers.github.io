@@ -38,6 +38,7 @@ export default function Speakers() {
         <div
           key={i}
           className="speaker"
+          data-cable-port={i === 0 ? 'spk-left' : 'spk-right'}
           style={{
             transform: `scale(${pulse}) translateY(${i === 0 ? -wobble : wobble}px)`,
           }}

@@ -46,7 +46,7 @@ export default function DrumDevice() {
   }
 
   return (
-    <div className="drum-device" data-fabric-exclude data-beam-block>
+    <div className="drum-device" data-fabric-exclude data-beam-block data-cable-port="drum">
       <div className="drum-pads">
         {PADS.map((p) => (
           <DrumPad

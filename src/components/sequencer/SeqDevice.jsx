@@ -70,7 +70,7 @@ export default function SeqDevice() {
   }, [])
 
   return (
-    <div className="seq-device" data-fabric-exclude data-beam-block>
+    <div className="seq-device" data-fabric-exclude data-beam-block data-cable-port="seq">
       <div className="seq-controls">
         <button className="seq-play" onClick={togglePlay}>
           {playing ? '\u25A0' : '\u25B6'}

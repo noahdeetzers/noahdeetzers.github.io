@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 
 const links = [
@@ -37,9 +37,11 @@ const SunIcon = () => (
   </svg>
 )
 
-export default function Nav() {
+export default function Nav({ studioOpen, setStudioOpen }) {
   const [scrolled, setScrolled] = useState(false)
   const [theme, setTheme] = useState(getInitialTheme)
+  const location = useLocation()
+  const navigate = useNavigate()
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
@@ -55,6 +57,20 @@ export default function Nav() {
   const toggleTheme = () =>
     setTheme((t) => (t === 'light' ? 'dark' : 'light'))
 
+  const toggleStudio = () => {
+    if (studioOpen) {
+      setStudioOpen(false)
+    } else {
+      if (location.pathname !== '/') {
+        navigate('/')
+        // Open panel after navigation
+        setTimeout(() => setStudioOpen(true), 50)
+      } else {
+        setStudioOpen(true)
+      }
+    }
+  }
+
   return (
     <motion.nav
       className={`nav ${scrolled ? 'nav--scrolled' : ''}`}
@@ -69,6 +85,12 @@ export default function Nav() {
             {link.label}
           </Link>
         ))}
+        <button
+          className={`studio-toggle ${studioOpen ? 'studio-toggle--active' : ''}`}
+          onClick={toggleStudio}
+        >
+          {studioOpen ? 'Close' : 'Play Synths'}
+        </button>
         <button
           className="theme-toggle"
           onClick={toggleTheme}

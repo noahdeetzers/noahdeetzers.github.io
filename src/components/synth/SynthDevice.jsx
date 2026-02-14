@@ -46,7 +46,7 @@ export default function SynthDevice() {
   const onRelease = useCallback((v) => { setRelease(v); if (engineRef.current) engineRef.current.setRelease(v) }, [])
 
   return (
-    <div className="synth-device" data-fabric-exclude data-beam-block>
+    <div className="synth-device" data-fabric-exclude data-beam-block data-cable-port="synth">
       <div className="synth-knobs">
         <Knob label="CUT" min={200} max={8000} value={cutoff} onChange={onCutoff} />
         <Knob label="RES" min={0} max={20} value={resonance} onChange={onResonance} />
