@@ -1,5 +1,4 @@
 import Nav from './Nav'
-import Contact from './Contact'
 import { Outlet } from 'react-router-dom'
 
 export default function Layout() {
@@ -9,7 +8,6 @@ export default function Layout() {
       <main>
         <Outlet />
       </main>
-      <Contact />
     </div>
   )
 }
