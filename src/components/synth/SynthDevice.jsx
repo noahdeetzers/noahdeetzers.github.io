@@ -2,21 +2,26 @@ import { useState, useRef, useCallback, useEffect } from 'react'
 import { getAudioContext, getSynthBus } from '../../audio/audioEngine'
 import { on } from '../../audio/audioBus'
 import { SynthEngine } from '../../audio/synthEngine'
+import store from '../../audio/studioStore'
 import Knob from './Knob'
 import MiniKeys from './MiniKeys'
 
 export default function SynthDevice() {
   const engineRef = useRef(null)
-  const [cutoff, setCutoff] = useState(2000)
-  const [resonance, setResonance] = useState(1)
-  const [attack, setAttack] = useState(0.05)
-  const [release, setRelease] = useState(0.3)
+  const [cutoff, setCutoff] = useState(() => store.cutoff)
+  const [resonance, setResonance] = useState(() => store.resonance)
+  const [attack, setAttack] = useState(() => store.attack)
+  const [release, setRelease] = useState(() => store.release)
 
   function ensureEngine() {
     if (!engineRef.current) {
       const ctx = getAudioContext()
       const bus = getSynthBus()
       engineRef.current = new SynthEngine(ctx, bus)
+      engineRef.current.setCutoff(store.cutoff)
+      engineRef.current.setResonance(store.resonance)
+      engineRef.current.setAttack(store.attack)
+      engineRef.current.setRelease(store.release)
     }
     return engineRef.current
   }
@@ -40,10 +45,10 @@ export default function SynthDevice() {
     if (engineRef.current) engineRef.current.noteOff()
   }, [])
 
-  const onCutoff = useCallback((v) => { setCutoff(v); if (engineRef.current) engineRef.current.setCutoff(v) }, [])
-  const onResonance = useCallback((v) => { setResonance(v); if (engineRef.current) engineRef.current.setResonance(v) }, [])
-  const onAttack = useCallback((v) => { setAttack(v); if (engineRef.current) engineRef.current.setAttack(v) }, [])
-  const onRelease = useCallback((v) => { setRelease(v); if (engineRef.current) engineRef.current.setRelease(v) }, [])
+  const onCutoff = useCallback((v) => { setCutoff(v); store.cutoff = v; if (engineRef.current) engineRef.current.setCutoff(v) }, [])
+  const onResonance = useCallback((v) => { setResonance(v); store.resonance = v; if (engineRef.current) engineRef.current.setResonance(v) }, [])
+  const onAttack = useCallback((v) => { setAttack(v); store.attack = v; if (engineRef.current) engineRef.current.setAttack(v) }, [])
+  const onRelease = useCallback((v) => { setRelease(v); store.release = v; if (engineRef.current) engineRef.current.setRelease(v) }, [])
 
   return (
     <div className="synth-device" data-fabric-exclude data-beam-block data-cable-port="synth">

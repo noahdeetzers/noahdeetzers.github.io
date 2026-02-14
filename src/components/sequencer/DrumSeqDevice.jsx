@@ -2,15 +2,21 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { getAudioContext } from '../../audio/audioEngine'
 import { on } from '../../audio/audioBus'
 import { getSequencer, DRUM_TYPES, RATES, RATE_LABELS } from '../../audio/sequencerEngine'
+import store from '../../audio/studioStore'
 
 const DRUM_LABELS = ['KK', 'SN', 'HH', 'CP', 'TM', 'RM', 'PC', 'CB']
 
 export default function DrumSeqDevice() {
   const seqRef = useRef(null)
-  const [grid, setGrid] = useState(() => DRUM_TYPES.map(() => new Array(8).fill(false)))
+  const [grid, setGrid] = useState(() => {
+    if (store.drumGrid) return store.drumGrid
+    const g = DRUM_TYPES.map(() => new Array(store.drumSteps).fill(false))
+    store.drumGrid = g
+    return g
+  })
   const [activeStep, setActiveStep] = useState(-1)
-  const [steps, setSteps] = useState(8)
-  const [rateIdx, setRateIdx] = useState(3)
+  const [steps, setSteps] = useState(() => store.drumSteps)
+  const [rateIdx, setRateIdx] = useState(() => store.drumRateIdx)
   const paintRef = useRef(null)
 
   function ensureSeq() {
@@ -36,6 +42,7 @@ export default function DrumSeqDevice() {
     setGrid(prev => {
       const next = prev.map(row => [...row])
       next[drumIdx][stepIdx] = forceValue
+      store.drumGrid = next
       const seq = ensureSeq()
       seq.drumGrid = next
       return next
@@ -56,11 +63,13 @@ export default function DrumSeqDevice() {
   function changeSteps(delta) {
     const n = Math.max(1, Math.min(32, steps + delta))
     setSteps(n)
+    store.drumSteps = n
     setGrid(prev => {
       const next = prev.map(row => {
         if (n > row.length) return [...row, ...new Array(n - row.length).fill(false)]
         return row.slice(0, n)
       })
+      store.drumGrid = next
       const seq = ensureSeq()
       seq.drumGrid = next
       seq.setDrumSteps(n)
@@ -71,6 +80,7 @@ export default function DrumSeqDevice() {
   function cycleRate() {
     const next = (rateIdx + 1) % RATES.length
     setRateIdx(next)
+    store.drumRateIdx = next
     const seq = ensureSeq()
     seq.setDrumRate(RATES[next])
   }

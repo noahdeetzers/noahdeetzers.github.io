@@ -2,15 +2,21 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { getAudioContext } from '../../audio/audioEngine'
 import { on } from '../../audio/audioBus'
 import { getSequencer, SYNTH_NOTES, RATES, RATE_LABELS } from '../../audio/sequencerEngine'
+import store from '../../audio/studioStore'
 
 const DISPLAY_ORDER = [...SYNTH_NOTES].reverse()
 
 export default function SynthSeqDevice() {
   const seqRef = useRef(null)
-  const [grid, setGrid] = useState(() => SYNTH_NOTES.map(() => new Array(8).fill(false)))
+  const [grid, setGrid] = useState(() => {
+    if (store.synthGrid) return store.synthGrid
+    const g = SYNTH_NOTES.map(() => new Array(store.synthSteps).fill(false))
+    store.synthGrid = g
+    return g
+  })
   const [activeStep, setActiveStep] = useState(-1)
-  const [steps, setSteps] = useState(8)
-  const [rateIdx, setRateIdx] = useState(3)
+  const [steps, setSteps] = useState(() => store.synthSteps)
+  const [rateIdx, setRateIdx] = useState(() => store.synthRateIdx)
   const paintRef = useRef(null) // { painting: bool, value: bool }
 
   function ensureSeq() {
@@ -37,6 +43,7 @@ export default function SynthSeqDevice() {
     setGrid(prev => {
       const next = prev.map(row => [...row])
       next[noteIdx][stepIdx] = forceValue
+      store.synthGrid = next
       const seq = ensureSeq()
       seq.synthGrid = next
       return next
@@ -57,11 +64,13 @@ export default function SynthSeqDevice() {
   function changeSteps(delta) {
     const n = Math.max(1, Math.min(32, steps + delta))
     setSteps(n)
+    store.synthSteps = n
     setGrid(prev => {
       const next = prev.map(row => {
         if (n > row.length) return [...row, ...new Array(n - row.length).fill(false)]
         return row.slice(0, n)
       })
+      store.synthGrid = next
       const seq = ensureSeq()
       seq.synthGrid = next
       seq.setSynthSteps(n)
@@ -72,6 +81,7 @@ export default function SynthSeqDevice() {
   function cycleRate() {
     const next = (rateIdx + 1) % RATES.length
     setRateIdx(next)
+    store.synthRateIdx = next
     const seq = ensureSeq()
     seq.setSynthRate(RATES[next])
   }

@@ -1,12 +1,13 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { getAudioContext } from '../audio/audioEngine'
 import { getSequencer } from '../audio/sequencerEngine'
+import store from '../audio/studioStore'
 import Knob from './synth/Knob'
 
 export default function TransportBar() {
   const seqRef = useRef(null)
   const [playing, setPlaying] = useState(false)
-  const [tempo, setTempo] = useState(120)
+  const [tempo, setTempo] = useState(() => store.tempo)
 
   function ensureSeq() {
     if (!seqRef.current) {
@@ -36,6 +37,7 @@ export default function TransportBar() {
 
   const onTempo = useCallback((v) => {
     setTempo(v)
+    store.tempo = v
     if (seqRef.current) seqRef.current.setTempo(v)
   }, [])
 
