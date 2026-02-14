@@ -43,6 +43,7 @@ export default function StudioPanel({ open }) {
             if (def === 'visible') setDevicesLanded(true)
           }}
         >
+          <span className="studio-version">v1.0</span>
           <div className="studio-devices">
             {/* Shared transport */}
             <div className="studio-row studio-row--center">
