@@ -1243,11 +1243,11 @@ a {
    Home Content (slide)
    ======================== */
 .home-content {
-  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: margin-left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .home-content--shifted {
-  transform: translateX(700px);
+  margin-left: 700px;
 }
 
 /* ========================
@@ -1306,22 +1306,20 @@ a {
 /* ========================
    Studio Panel Responsive
    ======================== */
-@media (max-width: 1400px) {
+@media (max-width: 1023px) {
+  .studio-panel {
+    width: 100%;
+    border-right: none;
+  }
+
   .home-content--shifted {
-    transform: none;
+    margin-left: 0;
     opacity: 0;
     pointer-events: none;
   }
 
   .home-content {
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    transition: margin-left 0.5s cubic-bezier(0.4, 0, 0.2, 1),
                 opacity 0.3s ease;
-  }
-}
-
-@media (max-width: 1023px) {
-  .studio-panel {
-    width: 100%;
-    border-right: none;
   }
 }
