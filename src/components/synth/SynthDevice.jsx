@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
-import { getAudioContext, getDeviceBus } from '../../audio/audioEngine'
+import { getAudioContext, getSynthBus } from '../../audio/audioEngine'
 import { on } from '../../audio/audioBus'
 import { SynthEngine } from '../../audio/synthEngine'
 import Knob from './Knob'
@@ -15,7 +15,7 @@ export default function SynthDevice() {
   function ensureEngine() {
     if (!engineRef.current) {
       const ctx = getAudioContext()
-      const bus = getDeviceBus()
+      const bus = getSynthBus()
       engineRef.current = new SynthEngine(ctx, bus)
     }
     return engineRef.current

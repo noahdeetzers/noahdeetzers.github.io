@@ -3,8 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 import FabricWarp from './FabricWarp'
 import SynthDevice from './synth/SynthDevice'
 import DrumDevice from './drum/DrumDevice'
-import SeqDevice from './sequencer/SeqDevice'
+import SynthSeqDevice from './sequencer/SynthSeqDevice'
+import DrumSeqDevice from './sequencer/DrumSeqDevice'
 import FxDevice from './fx/FxDevice'
+import Mixer from './mixer/Mixer'
 import Speakers from './Speakers'
 import CableOverlay from './CableOverlay'
 
@@ -41,31 +43,40 @@ export default function StudioPanel({ open }) {
           }}
         >
           <div className="studio-devices">
-            {/* Row 1: Synth + Drum side by side */}
-            <div className="studio-row studio-row--pair">
-              <FabricWarp intensity={0.6}>
-                <SynthDevice />
-              </FabricWarp>
-              <FabricWarp intensity={0.6}>
-                <DrumDevice />
-              </FabricWarp>
+            {/* Two-column layout: Synth chain | Drum chain */}
+            <div className="studio-columns">
+              <div className="studio-column">
+                <FabricWarp intensity={0.6}>
+                  <SynthDevice />
+                </FabricWarp>
+                <FabricWarp intensity={0.5}>
+                  <SynthSeqDevice />
+                </FabricWarp>
+                <FabricWarp intensity={0.5}>
+                  <FxDevice chain="synth" portPrefix="synth" />
+                </FabricWarp>
+              </div>
+              <div className="studio-column">
+                <FabricWarp intensity={0.6}>
+                  <DrumDevice />
+                </FabricWarp>
+                <FabricWarp intensity={0.5}>
+                  <DrumSeqDevice />
+                </FabricWarp>
+                <FabricWarp intensity={0.5}>
+                  <FxDevice chain="drum" portPrefix="drum" />
+                </FabricWarp>
+              </div>
             </div>
 
-            {/* Row 2: Sequencer centered */}
+            {/* Full-width: Mixer */}
             <div className="studio-row studio-row--center">
-              <FabricWarp intensity={0.5}>
-                <SeqDevice />
+              <FabricWarp intensity={0.4}>
+                <Mixer />
               </FabricWarp>
             </div>
 
-            {/* Row 3: FX pedals centered */}
-            <div className="studio-row studio-row--center">
-              <FabricWarp intensity={0.5}>
-                <FxDevice />
-              </FabricWarp>
-            </div>
-
-            {/* Row 4: Speakers centered */}
+            {/* Full-width: Speakers */}
             <div className="studio-row studio-row--center">
               <FabricWarp intensity={0.4}>
                 <Speakers />

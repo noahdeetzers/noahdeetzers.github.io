@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
-import { getAudioContext, getDeviceBus } from '../../audio/audioEngine'
+import { getAudioContext, getDrumBus } from '../../audio/audioEngine'
 import { on } from '../../audio/audioBus'
 import { DrumEngine } from '../../audio/drumEngine'
 import DrumPad from './DrumPad'
@@ -22,7 +22,7 @@ export default function DrumDevice() {
   function ensureEngine() {
     if (!engineRef.current) {
       const ctx = getAudioContext()
-      const bus = getDeviceBus()
+      const bus = getDrumBus()
       engineRef.current = new DrumEngine(ctx, bus)
     }
     return engineRef.current

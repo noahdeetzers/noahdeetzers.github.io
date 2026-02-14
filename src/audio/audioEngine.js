@@ -1,5 +1,8 @@
 let ctx = null
-let deviceBus = null
+let synthBus = null
+let drumBus = null
+let synthChannel = null
+let drumChannel = null
 let masterGain = null
 let analyser = null
 
@@ -11,13 +14,42 @@ export function getAudioContext() {
   return ctx
 }
 
-export function getDeviceBus() {
-  if (!deviceBus) {
+export function getSynthBus() {
+  if (!synthBus) {
     const c = getAudioContext()
-    deviceBus = c.createGain()
-    deviceBus.connect(getMasterBus())
+    synthBus = c.createGain()
+    synthBus.connect(getSynthChannel())
   }
-  return deviceBus
+  return synthBus
+}
+
+export function getDrumBus() {
+  if (!drumBus) {
+    const c = getAudioContext()
+    drumBus = c.createGain()
+    drumBus.connect(getDrumChannel())
+  }
+  return drumBus
+}
+
+export function getSynthChannel() {
+  if (!synthChannel) {
+    const c = getAudioContext()
+    synthChannel = c.createGain()
+    synthChannel.gain.value = 0.7
+    synthChannel.connect(getMasterBus())
+  }
+  return synthChannel
+}
+
+export function getDrumChannel() {
+  if (!drumChannel) {
+    const c = getAudioContext()
+    drumChannel = c.createGain()
+    drumChannel.gain.value = 0.7
+    drumChannel.connect(getMasterBus())
+  }
+  return drumChannel
 }
 
 export function getMasterBus() {
@@ -37,16 +69,18 @@ export function getAnalyser() {
   return analyser
 }
 
-export function insertFxChain(fxInput, fxOutput) {
-  const bus = getDeviceBus()
-  const master = getMasterBus()
+export function insertFxChain(chain, fxInput, fxOutput) {
+  const bus = chain === 'drum' ? getDrumBus() : getSynthBus()
+  const channel = chain === 'drum' ? getDrumChannel() : getSynthChannel()
   try { bus.disconnect() } catch (e) { /* may already be disconnected */ }
   bus.connect(fxInput)
-  fxOutput.connect(master)
+  fxOutput.connect(channel)
 }
 
-export function removeFxChain() {
-  if (!deviceBus || !masterGain) return
-  try { deviceBus.disconnect() } catch (e) {}
-  deviceBus.connect(masterGain)
+export function removeFxChain(chain) {
+  const bus = chain === 'drum' ? drumBus : synthBus
+  const channel = chain === 'drum' ? drumChannel : synthChannel
+  if (!bus || !channel) return
+  try { bus.disconnect() } catch (e) {}
+  bus.connect(channel)
 }

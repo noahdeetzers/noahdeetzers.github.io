@@ -1,8 +1,8 @@
 import Knob from '../synth/Knob'
 
-export default function Pedal({ label, knobs }) {
+export default function Pedal({ label, knobs, portName }) {
   return (
-    <div className="pedal" data-cable-port={label.toLowerCase()}>
+    <div className="pedal" data-cable-port={portName || label.toLowerCase()}>
       <div className="pedal-label">{label}</div>
       <div className="pedal-knobs">
         {knobs.map((k) => (

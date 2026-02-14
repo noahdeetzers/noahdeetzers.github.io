@@ -1,13 +1,22 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 
 const CABLE_DEFS = [
-  { from: 'synth', fromSide: 'bottom', to: 'seq', toSide: 'top', color: 'var(--text-secondary)' },
-  { from: 'drum', fromSide: 'bottom', to: 'seq', toSide: 'top', color: 'var(--text-secondary)' },
-  { from: 'seq', fromSide: 'bottom', to: 'dist', toSide: 'top', color: 'var(--text-secondary)' },
-  { from: 'dist', fromSide: 'right', to: 'delay', toSide: 'left', color: 'var(--accent)' },
-  { from: 'delay', fromSide: 'right', to: 'reverb', toSide: 'left', color: 'var(--accent)' },
-  { from: 'reverb', fromSide: 'bottom', to: 'spk-left', toSide: 'top', color: 'var(--text-secondary)' },
-  { from: 'reverb', fromSide: 'bottom', to: 'spk-right', toSide: 'top', color: 'var(--text-secondary)' },
+  // Synth chain
+  { from: 'synth', fromSide: 'bottom', to: 'synth-seq', toSide: 'top', color: 'var(--text-secondary)' },
+  { from: 'synth-seq', fromSide: 'bottom', to: 'synth-dist', toSide: 'top', color: 'var(--text-secondary)' },
+  { from: 'synth-dist', fromSide: 'right', to: 'synth-delay', toSide: 'left', color: 'var(--accent)' },
+  { from: 'synth-delay', fromSide: 'right', to: 'synth-reverb', toSide: 'left', color: 'var(--accent)' },
+  // Drum chain
+  { from: 'drum', fromSide: 'bottom', to: 'drum-seq', toSide: 'top', color: 'var(--text-secondary)' },
+  { from: 'drum-seq', fromSide: 'bottom', to: 'drum-dist', toSide: 'top', color: 'var(--text-secondary)' },
+  { from: 'drum-dist', fromSide: 'right', to: 'drum-delay', toSide: 'left', color: 'var(--accent)' },
+  { from: 'drum-delay', fromSide: 'right', to: 'drum-reverb', toSide: 'left', color: 'var(--accent)' },
+  // Merge to mixer
+  { from: 'synth-reverb', fromSide: 'bottom', to: 'mixer', toSide: 'top', color: 'var(--text-secondary)' },
+  { from: 'drum-reverb', fromSide: 'bottom', to: 'mixer', toSide: 'top', color: 'var(--text-secondary)' },
+  // Output
+  { from: 'mixer', fromSide: 'bottom', to: 'spk-left', toSide: 'top', color: 'var(--text-secondary)' },
+  { from: 'mixer', fromSide: 'bottom', to: 'spk-right', toSide: 'top', color: 'var(--text-secondary)' },
 ]
 
 function getPortPoint(el, side) {
