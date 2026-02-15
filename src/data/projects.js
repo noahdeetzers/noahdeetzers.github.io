@@ -4,7 +4,7 @@ const projects = [
     title: 'Fine-Tech Compressor FC 1B',
     description: 'A precision compressor plugin with vintage character and modern control. Designed for transparent dynamic shaping across any source material.',
     image: '/media/fineTech/close up 1-fs8 edit.png',
-    tags: ['Audio Plugin'],
+    tags: ['3D Art'],
   },
   {
     id: 'fractalShift',
@@ -36,7 +36,7 @@ const projects = [
     title: 'Subtle Spaces',
     description: 'A 3D-rendered interior scene exploring light, texture, and atmosphere. Focused on realistic material work and spatial composition.',
     image: '/media/subtleSpaces/Day-Drumset1.png',
-    tags: ['3D Art'],
+    tags: ['Audio Plugin'],
   },
   {
     id: '3dArt',
