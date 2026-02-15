@@ -481,6 +481,67 @@ a {
 }
 
 /* ========================
+   Project Detail
+   ======================== */
+.back-link {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  transition: color 0.2s ease;
+}
+
+.back-link:hover {
+  color: var(--text);
+}
+
+.project-detail-hero {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+  margin-bottom: 32px;
+}
+
+.project-detail-hero img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+}
+
+.project-detail-body {
+  max-width: 640px;
+  margin-bottom: 40px;
+}
+
+.project-detail-title {
+  font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+
+.project-detail-desc {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-top: 16px;
+}
+
+.project-detail-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.project-detail-gallery img {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+}
+
+/* ========================
    Music Players
    ======================== */
 .music-players {
