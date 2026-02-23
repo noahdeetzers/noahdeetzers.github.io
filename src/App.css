@@ -350,17 +350,14 @@ a {
 }
 
 .project-card {
+  display: block;
   background: var(--card-bg);
   border-radius: 12px;
   box-shadow: var(--card-shadow);
   overflow: hidden;
   cursor: pointer;
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-.project-card:hover {
-  box-shadow: var(--card-shadow-hover);
-  transform: translateY(-2px);
+  color: inherit;
+  text-decoration: none;
 }
 
 .project-card-image {
@@ -373,11 +370,6 @@ a {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.project-card:hover .project-card-image img {
-  transform: scale(1.03);
 }
 
 .project-card-info {
@@ -1472,5 +1464,56 @@ a {
   .home-content {
     transition: margin-left 0.5s cubic-bezier(0.4, 0, 0.2, 1),
                 opacity 0.3s ease;
+  }
+}
+
+/* ========================
+   Studio Mobile
+   ======================== */
+@media (max-width: 640px) {
+  .studio-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .studio-devices {
+    padding: 16px 12px;
+  }
+
+  .synth-device {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .seq-device {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .drum-device {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .drum-pad {
+    width: 100%;
+    height: 38px;
+  }
+
+  .fx-device {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .mixer {
+    gap: 16px;
+    padding: 12px 16px;
+  }
+
+  .speakers {
+    gap: 8px;
+  }
+
+  .studio-row--center {
+    flex-wrap: wrap;
   }
 }
