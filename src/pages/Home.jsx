@@ -1,23 +1,10 @@
-import { Link, useOutletContext } from 'react-router-dom'
+import { useOutletContext } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import FadeIn from '../components/FadeIn'
 import DotField from '../components/DotField'
 import FabricWarp from '../components/FabricWarp'
 import FabricText from '../components/FabricText'
 import StudioPanel from '../components/StudioPanel'
-
-const categories = [
-  { label: 'Software', path: '/software', desc: 'Audio plugins & tools' },
-  { label: 'Music', path: '/music', desc: 'Songs & productions' },
-  { label: 'Art', path: '/art', desc: '3D renders & environments' },
-  { label: 'Research', path: '/research', desc: 'Published papers' },
-]
-
-function handleCardMove(e) {
-  const rect = e.currentTarget.getBoundingClientRect()
-  e.currentTarget.style.setProperty('--glow-x', `${e.clientX - rect.left}px`)
-  e.currentTarget.style.setProperty('--glow-y', `${e.clientY - rect.top}px`)
-}
 
 // Stagger children in the hero
 const heroContainer = {
@@ -55,9 +42,6 @@ const heroSub = {
     transition: { duration: 0.6, ease: 'easeOut' },
   },
 }
-
-// Cards — scroll-triggered with scale + slide
-const cardEase = [0.16, 1, 0.3, 1]
 
 export default function Home() {
   const { studioOpen } = useOutletContext()
@@ -104,35 +88,6 @@ export default function Home() {
           </FadeIn>
         </section>
 
-        <section className="home-categories">
-          {categories.map((cat, i) => (
-            <motion.div
-              key={cat.path}
-              initial={{ opacity: 0, y: 55, scale: 0.92 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: true, margin: '-30px' }}
-              transition={{
-                delay: i * 0.1,
-                duration: 0.65,
-                ease: cardEase,
-              }}
-            >
-              <FabricWarp intensity={1}>
-                <Link
-                  to={cat.path}
-                  className="category-card"
-                  data-fabric-exclude
-                  data-beam-block
-                  onMouseMove={handleCardMove}
-                >
-                  <h3>{cat.label}</h3>
-                  <p>{cat.desc}</p>
-                  <span className="category-arrow">&rarr;</span>
-                </Link>
-              </FabricWarp>
-            </motion.div>
-          ))}
-        </section>
       </div>
     </div>
   )

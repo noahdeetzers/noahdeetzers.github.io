@@ -2,12 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 
-const links = [
-  { label: 'Software', to: '/software' },
-  { label: 'Music', to: '/music' },
-  { label: 'Art', to: '/art' },
-  { label: 'Research', to: '/research' },
-]
+const links = []
 
 function getInitialTheme() {
   const stored = localStorage.getItem('theme')
